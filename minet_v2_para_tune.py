@@ -10,7 +10,7 @@ import numpy as np
 import tensorflow as tf
 import datetime
 import ctr_funcs as func
-import config_amazon as cfg
+import config_instreamads as cfg
 import os
 import shutil
 import sys
