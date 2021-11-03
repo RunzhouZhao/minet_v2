@@ -535,7 +535,7 @@ for item in para_list:
         threads = tf.train.start_queue_runners(sess, coord)
         train_loss_list = []
         func.print_time()
-        
+
         print('Start train loop')
 
         epoch=-1
@@ -564,6 +564,7 @@ for item in para_list:
                           .format(*auc_and_loss))
                 if (epoch+1)%val_step_size == 0:
                     val_pred_score_all_1=[]
+                    val_label_all_1=[]
                     try:
                         while True:
                             val_ft_inst_1,val_label_inst_1= sess.run([val_ft_1,val_label_1])
