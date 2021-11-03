@@ -33,6 +33,7 @@ k = int(sys.argv[3])
 kp_prob = cfg.kp_prob
 n_epoch = cfg.n_epoch
 record_step_size = cfg.record_step_size
+val_step_size=500
 opt_alg = cfg.opt_alg
 item_att_hidden_dim = cfg.item_att_hidden_dim
 interest_att_hidden_dim = cfg.interest_att_hidden_dim
@@ -40,7 +41,8 @@ interest_att_hidden_dim = cfg.interest_att_hidden_dim
 
 ## dataset 1
 train_file_name_1 = ['data/ready_%s/%d.csv'%(train_date,i) for i in range(50)]
-test_file_name_1 = ['data/ready_%s/%d.csv'%(test_date,i) for i in range(50)]
+test_file_name_1 = ['data/ready_%s/%d.csv'%(test_date,i) for i in range(5,50)]
+val_file_name_1=['data/ready_%s/%d.csv'%(test_date,i) for i in range(5)]
 batch_size_1 = cfg.batch_size_1
 layer_dim_1 = cfg.layer_dim_1
 n_one_hot_slot_1 = cfg.n_one_hot_slot_1
@@ -123,6 +125,8 @@ for item in para_list:
         train_ft_1, train_label_1 = func.tf_input_pipeline(train_file_name_1, batch_size_1, n_epoch, \
                                                            label_col_idx_1, record_defaults_1)
         test_ft_1, test_label_1 = func.tf_input_pipeline_test(test_file_name_1, batch_size_1, 1, \
+                                                              label_col_idx_1, record_defaults_1)
+        val_ft_1, val_label_1 = func.tf_input_pipeline_test(val_file_name_1, batch_size_1, 1, \
                                                               label_col_idx_1, record_defaults_1)
         # load data set 2
         #train_ft_2, train_label_2 = func.tf_input_pipeline(train_file_name_2, batch_size_2, n_epoch, \
@@ -531,6 +535,19 @@ for item in para_list:
         threads = tf.train.start_queue_runners(sess, coord)
         train_loss_list = []
         func.print_time()
+
+        val_label_all_1 = []
+        try:
+            while True:
+                val_label_inst_1 = sess.run(val_label_1)
+                if input_format == 'csv':
+                    val_label_inst_1 = np.transpose([val_label_inst_1])
+                val_label_all_1.append(val_label_inst_1)
+                
+        except tf.errors.OutOfRangeError:
+            func.print_time()
+            print('Done val labels -- epoch limit reached')
+        
         print('Start train loop')
 
         epoch=-1
@@ -557,7 +574,22 @@ for item in para_list:
                     func.print_time() 
                     print('Generation # {}. Train Loss: {:.4f}.'\
                           .format(*auc_and_loss))
-
+                if (epoch+1)%val_step_size == 0:
+                    val_pred_score_all_1=[]
+                    try:
+                        while True:
+                            val_ft_inst_1= sess.run(val_ft_1)
+                            cur_val_pred_score_1 = sess.run(pred_score_1, feed_dict={ \
+                                        x_input_1:val_ft_inst_1, keep_prob:1.0})
+                            val_pred_score_all_1.append(cur_val_pred_score_1.flatten())
+                    except tf.errors.OutOfRangeError:
+                        func.print_time()
+                        print('Done val -- epoch limit reached') 
+                    val_pred_score_re_1 = func.list_flatten(val_pred_score_all_1)
+                    val_label_re_1 = func.list_flatten(val_label_all_1)
+                    val_auc_1, _, _ = func.cal_auc(val_pred_score_re_1, val_label_re_1) 
+                    print('Generation # {}. Val AUC: {:.4f}.'\
+                          .format(*[epoch+1,val_auc_1])) 
         except tf.errors.OutOfRangeError:
             func.print_time()
             print('Done training -- epoch limit reached')
