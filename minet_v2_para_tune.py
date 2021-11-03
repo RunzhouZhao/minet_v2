@@ -39,8 +39,8 @@ interest_att_hidden_dim = cfg.interest_att_hidden_dim
 
 
 ## dataset 1
-train_file_name_1 = ['/home/ec2-user/myminet/data/ready_%s/%d.csv'%(train_date,i) for i in range(50)]
-test_file_name_1 = ['/home/ec2-user/myminet/data/ready_%s/%d.csv'%(test_date,i) for i in range(50)]
+train_file_name_1 = ['data/ready_%s/%d.csv'%(train_date,i) for i in range(50)]
+test_file_name_1 = ['data/ready_%s/%d.csv'%(test_date,i) for i in range(50)]
 batch_size_1 = cfg.batch_size_1
 layer_dim_1 = cfg.layer_dim_1
 n_one_hot_slot_1 = cfg.n_one_hot_slot_1
