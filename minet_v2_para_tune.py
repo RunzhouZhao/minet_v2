@@ -535,18 +535,6 @@ for item in para_list:
         threads = tf.train.start_queue_runners(sess, coord)
         train_loss_list = []
         func.print_time()
-
-        val_label_all_1 = []
-        try:
-            while True:
-                val_label_inst_1 = sess.run(val_label_1)
-                if input_format == 'csv':
-                    val_label_inst_1 = np.transpose([val_label_inst_1])
-                val_label_all_1.append(val_label_inst_1)
-                
-        except tf.errors.OutOfRangeError:
-            func.print_time()
-            print('Done val labels -- epoch limit reached')
         
         print('Start train loop')
 
@@ -578,9 +566,12 @@ for item in para_list:
                     val_pred_score_all_1=[]
                     try:
                         while True:
-                            val_ft_inst_1= sess.run(val_ft_1)
+                            val_ft_inst_1,val_label_inst_1= sess.run([val_ft_1,val_label_1])
+                            if input_format == 'csv':
+                                val_label_inst_1 = np.transpose([val_label_inst_1])
                             cur_val_pred_score_1 = sess.run(pred_score_1, feed_dict={ \
                                         x_input_1:val_ft_inst_1, keep_prob:1.0})
+                            val_label_all_1.append(val_label_inst_1)
                             val_pred_score_all_1.append(cur_val_pred_score_1.flatten())
                     except tf.errors.OutOfRangeError:
                         func.print_time()
