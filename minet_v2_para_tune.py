@@ -126,7 +126,7 @@ for item in para_list:
                                                            label_col_idx_1, record_defaults_1)
         test_ft_1, test_label_1 = func.tf_input_pipeline_test(test_file_name_1, batch_size_1, 1, \
                                                               label_col_idx_1, record_defaults_1)
-        val_ft_1, val_label_1 = func.tf_input_pipeline_test(val_file_name_1, batch_size_1, 1, \
+        val_ft_1, val_label_1 = func.tf_input_pipeline_test(val_file_name_1, 1000000, 1, \
                                                               label_col_idx_1, record_defaults_1)
         # load data set 2
         #train_ft_2, train_label_2 = func.tf_input_pipeline(train_file_name_2, batch_size_2, n_epoch, \
@@ -535,7 +535,7 @@ for item in para_list:
         threads = tf.train.start_queue_runners(sess, coord)
         train_loss_list = []
         func.print_time()
-
+        val_ft_inst_1,val_label_inst_1= sess.run([val_ft_1,val_label_1])
         print('Start train loop')
 
         epoch=-1
@@ -565,15 +565,13 @@ for item in para_list:
                 if (epoch+1)%val_step_size == 0:
                     val_pred_score_all_1=[]
                     val_label_all_1=[]
-                    try:
-                        while True:
-                            val_ft_inst_1,val_label_inst_1= sess.run([val_ft_1,val_label_1])
-                            if input_format == 'csv':
-                                val_label_inst_1 = np.transpose([val_label_inst_1])
-                            cur_val_pred_score_1 = sess.run(pred_score_1, feed_dict={ \
+                    try:    
+                        if input_format == 'csv':
+                            val_label_inst_1 = np.transpose([val_label_inst_1])
+                        cur_val_pred_score_1 = sess.run(pred_score_1, feed_dict={ \
                                         x_input_1:val_ft_inst_1, keep_prob:1.0})
-                            val_label_all_1.append(val_label_inst_1)
-                            val_pred_score_all_1.append(cur_val_pred_score_1.flatten())
+                        val_label_all_1.append(val_label_inst_1)
+                        val_pred_score_all_1.append(cur_val_pred_score_1.flatten())
                     except tf.errors.OutOfRangeError:
                         func.print_time()
                         print('Done val -- epoch limit reached') 
