@@ -565,17 +565,14 @@ for item in para_list:
                           .format(*auc_and_loss))
                 if (epoch+1)%val_step_size == 0:
                     val_pred_score_all_1=[]
-                    val_label_all_1=[]
-                    try:    
-                        if input_format == 'csv':
-                            val_label_inst = np.transpose([val_label_inst])
-                        cur_val_pred_score = sess.run(pred_score_1, feed_dict={ \
-                                        x_input_1:val_ft_inst, keep_prob:1.0})
-                        val_label_all_1.append(val_label_inst)
-                        val_pred_score_all_1.append(cur_val_pred_score.flatten())
-                    except tf.errors.OutOfRangeError:
-                        func.print_time()
-                        print('Done val -- epoch limit reached') 
+                    val_label_all_1=[] 
+                    if input_format == 'csv':
+                        val_label_inst = np.transpose([val_label_inst])
+                    cur_val_pred_score = sess.run(pred_score_1, feed_dict={ \
+                                    x_input_1:val_ft_inst, keep_prob:1.0})
+                    val_label_all_1.append(val_label_inst)
+                    val_pred_score_all_1.append(cur_val_pred_score.flatten())
+                    print('Done val -- epoch limit reached') 
                     val_pred_score_re_1 = func.list_flatten(val_pred_score_all_1)
                     val_label_re_1 = func.list_flatten(val_label_all_1)
                     val_auc_1, _, _ = func.cal_auc(val_pred_score_re_1, val_label_re_1) 
