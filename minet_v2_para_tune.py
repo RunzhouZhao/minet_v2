@@ -536,6 +536,7 @@ for item in para_list:
         train_loss_list = []
         func.print_time()
         val_ft_inst_1,val_label_inst_1= sess.run([val_ft_1,val_label_1])
+        val_ft_inst,val_label_inst=val_ft_inst_1,val_label_inst_1
         print('Start train loop')
 
         epoch=-1
@@ -567,11 +568,11 @@ for item in para_list:
                     val_label_all_1=[]
                     try:    
                         if input_format == 'csv':
-                            val_label_inst_1 = np.transpose([val_label_inst_1])
-                        cur_val_pred_score_1 = sess.run(pred_score_1, feed_dict={ \
-                                        x_input_1:val_ft_inst_1, keep_prob:1.0})
-                        val_label_all_1.append(val_label_inst_1)
-                        val_pred_score_all_1.append(cur_val_pred_score_1.flatten())
+                            val_label_inst = np.transpose([val_label_inst])
+                        cur_val_pred_score = sess.run(pred_score_1, feed_dict={ \
+                                        x_input_1:val_ft_inst, keep_prob:1.0})
+                        val_label_all_1.append(val_label_inst)
+                        val_pred_score_all_1.append(cur_val_pred_score.flatten())
                     except tf.errors.OutOfRangeError:
                         func.print_time()
                         print('Done val -- epoch limit reached') 
