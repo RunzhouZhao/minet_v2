@@ -536,7 +536,6 @@ for item in para_list:
         train_loss_list = []
         func.print_time()
         val_ft_inst_1,val_label_inst_1= sess.run([val_ft_1,val_label_1])
-        val_ft_inst,val_label_inst=val_ft_inst_1,val_label_inst_1
         print('Start train loop')
 
         epoch=-1
@@ -567,6 +566,7 @@ for item in para_list:
                     val_pred_score_all_1=[]
                     val_label_all_1=[] 
                     if input_format == 'csv':
+                        val_ft_inst,val_label_inst=val_ft_inst_1,val_label_inst_1
                         val_label_inst = np.transpose([val_label_inst])
                     cur_val_pred_score = sess.run(pred_score_1, feed_dict={ \
                                     x_input_1:val_ft_inst, keep_prob:1.0})
