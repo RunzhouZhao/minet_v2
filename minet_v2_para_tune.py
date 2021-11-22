@@ -150,7 +150,7 @@ for item in para_list:
         len_list.append(n_user_one_hot_slot)
         len_list.append(n_user_mul_hot_slot*max_len_per_slot_u)
         len_list.append(n_one_hot_slot_1)
-        len_list.append(n_one_hot_slot_2+1)
+        len_list.append(n_one_hot_slot_2)
         len_list.append(n_mul_hot_slot_2*max_len_per_slot_2)
         
         # tar domain clk
