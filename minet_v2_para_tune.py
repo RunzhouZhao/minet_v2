@@ -308,7 +308,7 @@ for item in para_list:
         data_embed_r_exp = tf.expand_dims(data_embed_r, 1)
         # tile, dim: none * max_n_clk * total_embed_dim_1
         data_embed_r_tile = tf.tile(data_embed_r_exp, [1, max_n_clk, 1])
-        data_embed_r_re = tf.reshape(data_embed_r_tile, [-1, total_embed_dim_2+k])
+        data_embed_r_re = tf.reshape(data_embed_r_tile, [-1, total_embed_dim_2])
 
         data_embed_user_exp = tf.expand_dims(data_embed_user, 1)
         # tile, dim: none * max_n_clk * total_embed_dim_user
@@ -479,7 +479,7 @@ for item in para_list:
         = partition_input_1(x_input_1)
     data_embed_user_1 = get_user_embed(x_input_user_one_hot, x_input_user_mul_hot, total_embed_dim_user)
     data_embed_1 = get_concate_embed(x_input_one_hot, total_embed_dim_1)
-    data_embed_r = get_concate_embed_c(x_input_one_hot_r, x_input_mul_hot_r, total_embed_dim_2+k)
+    data_embed_r = get_concate_embed_c(x_input_one_hot_r, x_input_mul_hot_r, total_embed_dim_2)
     data_embed_clk_1 = get_concate_embed_clk_a(x_input_one_hot_1, max_n_clk_1, total_embed_dim_1)
     data_embed_clk_2 = get_concate_embed_clk(x_input_one_hot_2, x_input_mul_hot_2, max_n_clk_2, total_embed_dim_2)
 
