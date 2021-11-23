@@ -29,7 +29,7 @@ input_format = cfg.input_format
 rnd_seed = cfg.rnd_seed
 
 n_ft = cfg.n_ft
-k = int(sys.argv[3])
+k = cfg.k
 kp_prob = cfg.kp_prob
 n_epoch = cfg.n_epoch
 record_step_size = cfg.record_step_size
@@ -63,7 +63,7 @@ max_n_clk_1 = cfg.max_n_clk_1
 max_n_clk_2 = cfg.max_n_clk_2
 
 # n_user_slot_1 == n_user_slot_2
-n_user_one_hot_slot = 16
+n_user_one_hot_slot = 10
 n_user_mul_hot_slot = 2
 n_user_slot=n_user_one_hot_slot+n_user_mul_hot_slot
 max_len_per_slot_u=3
