@@ -398,7 +398,7 @@ for item in para_list:
         emb_mat = tf.Variable(tf.random_normal([n_ft + 1, k], stddev=0.01))
     
     # parameters - item att
-    in_dim = 3*total_embed_dim_1 + total_embed_dim_user + total_embed_dim_2 + k
+    in_dim = 3*total_embed_dim_1 + total_embed_dim_user + total_embed_dim_2
     out_dim = item_att_hidden_dim
     cur_range = np.sqrt(6.0 / (in_dim + out_dim))
     V_1 = tf.Variable(tf.random_uniform([in_dim, out_dim], -cur_range, cur_range))
