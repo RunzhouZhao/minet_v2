@@ -338,9 +338,8 @@ for item in para_list:
                                 x_input_one_hot_clk_2):
         data_embed_clk_2_re = tf.reshape(data_embed_clk_2, [-1, total_embed_dim_2])
         # ?, total_embed_dim_2 -> ?, total_embed_dim_1
-        temp_mat_ab = tf.matmul(tf.matmul(data_embed_clk_2_re, H_a), H_b)
-        cur_input = tf.concat([data_embed_clk_2_re, data_embed_1_re, data_embed_user_re, data_embed_r_re, \
-                               tf.multiply(temp_mat_ab, data_embed_r_re)], 1)
+        cur_input = tf.concat([data_embed_clk_2_re, data_embed_1_re, data_embed_r_re, data_embed_user_re, \
+                               tf.multiply(data_embed_clk_2_re, data_embed_r_re)], 1)
         hidden = tf.nn.relu(tf.matmul(cur_input, V_2))
         weight = tf.matmul(hidden, vv_2)
         weight = tf.reshape(weight, [-1, max_n_clk_2, 1])
@@ -408,7 +407,7 @@ for item in para_list:
     cur_range = np.sqrt(6.0 / (in_dim + out_dim))
     vv_1 = tf.Variable(tf.random_uniform([in_dim, out_dim], -cur_range, cur_range))
     
-    in_dim = 3*total_embed_dim_2 + total_embed_dim_user + total_embed_dim_1 + 2*k
+    in_dim = 3*total_embed_dim_2 + total_embed_dim_user + total_embed_dim_1
     out_dim = item_att_hidden_dim
     cur_range = np.sqrt(6.0 / (in_dim + out_dim))
     V_2 = tf.Variable(tf.random_uniform([in_dim, out_dim], -cur_range, cur_range))
@@ -418,18 +417,9 @@ for item in para_list:
     cur_range = np.sqrt(6.0 / (in_dim + out_dim))
     vv_2 = tf.Variable(tf.random_uniform([in_dim, out_dim], -cur_range, cur_range))
 
-    in_dim = total_embed_dim_2
-    out_dim = inter_dim
-    cur_range = np.sqrt(6.0 / (in_dim + out_dim))
-    H_a = tf.Variable(tf.random_uniform([in_dim, out_dim], -cur_range, cur_range))
-    
-    in_dim = inter_dim
-    out_dim = total_embed_dim_2+k
-    cur_range = np.sqrt(6.0 / (in_dim + out_dim))
-    H_b = tf.Variable(tf.random_uniform([in_dim, out_dim], -cur_range, cur_range))    
         
     # parameters - interest att
-    total_embed_dim_z = 2*total_embed_dim_1 + 2*total_embed_dim_2 + total_embed_dim_user+k
+    total_embed_dim_z = 2*total_embed_dim_1 + 2*total_embed_dim_2 + total_embed_dim_user
     
     in_dim = total_embed_dim_z
     out_dim = interest_att_hidden_dim
